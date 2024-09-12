@@ -10,6 +10,9 @@ export class MyProjectTsStack extends cdk.Stack {
 
     super(scope, id, props);
 
+    // Log the absolute path of website-dist for debugging
+    console.log("Asset path:", join(__dirname, "../website-dist"));
+
     new CodePipeline(this, 'Pipeline', {
       pipelineName: 'TestPipeline',
       dockerEnabledForSynth: true,
@@ -30,7 +33,12 @@ export class MyProjectTsStack extends cdk.Stack {
     const staticPageS3 = new s3.Bucket(this, 'StaticPageS3', {
       bucketName: "nyek-buzow-asdfghjkloissujnmbsaas",
       publicReadAccess: true,
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS, // Allow bucket-level public access but block ACL-based public access
+      blockPublicAccess: new s3.BlockPublicAccess({ // Disable public access blocking
+        blockPublicAcls: false,
+        ignorePublicAcls: false,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false
+      }),
       websiteIndexDocument: "index.html",
       cors: [
         {
@@ -44,7 +52,7 @@ export class MyProjectTsStack extends cdk.Stack {
     });
 
     new s3Deploy.BucketDeployment(this, "StaticPageS3Deploy", {
-      sources: [s3Deploy.Source.asset(join(__dirname, "../website-dist"))],
+      sources: [s3Deploy.Source.asset(join(__dirname, "../website-dist"))], // Make sure this path is correct
       destinationBucket: staticPageS3,
     });
 
