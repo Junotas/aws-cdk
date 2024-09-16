@@ -7,18 +7,34 @@ import {
   aws_cloudfront_origins as origins,
   RemovalPolicy,
 } from 'aws-cdk-lib';
+import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 
-export class MyStaticWebsiteStack extends cdk.Stack {
+export class MyProjectTsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // S3 Bucket to store website files
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
-      bucketName: 'nyek-buzow-asdfghjkloissujnmbsaas',
+      bucketName: 'nyek-buzow-asdfghjkloissujnmbsaas-unique-suffix',
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      // Optional: Automatically delete bucket when the stack is destroyed
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
+    });
+    new CodePipeline(this, 'Pipeline', {
+      pipelineName: 'TestPipeline',
+      dockerEnabledForSynth: true,
+      selfMutation: true,
+      dockerEnabledForSelfMutation: true,
+      synth: new ShellStep('Synth', {
+        input: CodePipelineSource.gitHub('Junotas/aws-cdk', 'main', {
+          authentication: cdk.SecretValue.secretsManager('github-oauth-token')
+        }),
+        commands: [
+          'npm ci',
+          'npm run build',
+          'npx cdk synth'
+        ],
+      }),
     });
 
     // Origin Access Identity for CloudFront to access S3
