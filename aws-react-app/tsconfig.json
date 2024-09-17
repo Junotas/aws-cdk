@@ -1,7 +1,9 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "jsx": "react-jsx",  // Enables JSX support for React
+    "noEmit": true,  // Set 'noEmit' to true (prevents emitting output)
+    "moduleResolution": "node",  // Ensures module resolution is set to 'node'
+    "esModuleInterop": true  // Enables compatibility for importing ES modules
+  },
+  "include": ["src/**/*"]  // Ensures all files in the 'src' directory are included
 }
