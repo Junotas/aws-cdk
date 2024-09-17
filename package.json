@@ -5,7 +5,8 @@
     "my-project-ts": "bin/my-project-ts.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build-react && tsc",
+    "build-react": "cd aws-react-app && npm install && npm run build",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk"
