@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",  // Enables JSX support for React
-    "noEmit": true,  // Set 'noEmit' to true (prevents emitting output)
-    "moduleResolution": "node",  // Ensures module resolution is set to 'node'
-    "esModuleInterop": true  // Enables compatibility for importing ES modules
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "esModuleInterop": true,
+    "strict": true, // Optional but recommended
+    "forceConsistentCasingInFileNames": true // Optional but recommended
   },
-  "include": ["src/**/*"]  // Ensures all files in the 'src' directory are included
+  "include": ["src/**/*"]
 }
